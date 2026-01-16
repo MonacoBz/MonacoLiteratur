@@ -3,6 +3,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/monacolibrary
     username: monaco
     password: Rocobz16
+    driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
     hibernate:
