@@ -15,7 +15,7 @@ public class MonacoLibraryApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         HttpApi api = new HttpApi();
-        api.realizaSolicitud();
+        api.realizaSolicitud("https://gutendex.com/books/?search=dickens%20great");
 
     }
 }
