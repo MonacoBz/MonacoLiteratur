@@ -9,8 +9,4 @@ public enum LENGUAJE {
     ES,
     @JsonProperty("fr")
     FR;
-
-
-
-
 }

@@ -1,6 +1,7 @@
 package com.app.monacolibrary;
 
-import com.app.monacolibrary.service.HttpApi;
+import com.app.monacolibrary.service.ApiRequest;
+import com.app.monacolibrary.ui.Ui;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,8 +15,8 @@ public class MonacoLibraryApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        HttpApi api = new HttpApi();
-        api.realizaSolicitud("https://gutendex.com/books/?search=dickens%20great");
+        Ui ui = new Ui();
+        ui.menu();
 
     }
 }

@@ -14,9 +14,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-public class HttpApi {
+public class ApiRequest {
 
-    public void realizaSolicitud(String url) throws JsonProcessingException {
+    public DatosLibro realizaSolicitud(String url) throws JsonProcessingException {
+        String json = obtenJson(url);
+        return obtenLibro(json);
+
+    }
+
+    private String obtenJson(String url){
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS)
                 .build();
@@ -33,12 +39,20 @@ public class HttpApi {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        String json = response.body();
-        ObjectMapper mapper = new ObjectMapper();
-        DatosLibro datosLibro;
-        DatosAutor libros;
-        JsonNode rootNode = mapper.readTree(json).path("results");
-        List<DatosLibro> listaLibros = mapper.convertValue(rootNode, new TypeReference<List<DatosLibro>>() {});
-        listaLibros.forEach(System.out::println);
+        return response.body();
+    }
+
+    private DatosLibro obtenLibro(String json){
+        DatosLibro libro = null;
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(json).path("results");
+            libro = mapper.convertValue(
+                    rootNode.get(0),
+                    new TypeReference<DatosLibro>() {});
+        }catch (JsonProcessingException error){
+            System.out.println(error.getMessage());
+        }
+        return libro;
     }
 }
