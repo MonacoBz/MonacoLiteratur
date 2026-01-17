@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-
+@Service
 public class ApiRequest {
 
     public DatosLibro realizaSolicitud(String url) throws JsonProcessingException {
@@ -53,6 +54,7 @@ public class ApiRequest {
         }catch (JsonProcessingException error){
             System.out.println(error.getMessage());
         }
+
         return libro;
     }
 }

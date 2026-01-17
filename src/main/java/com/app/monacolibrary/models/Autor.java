@@ -75,17 +75,4 @@ public class Autor {
         libro.setAutor(this);
     }
 
-    @Override
-    public String toString() {
-        List<String> titulos = getLibros().stream()
-                .map(Libro::getTitulo)
-                .toList();
-
-        return """
-           Autor: %s
-           Nacimiento: %s
-           Muerte: %s
-           Libros: %s
-           """.formatted(nombre, nacimiento, muerte, titulos);
-    }
 }

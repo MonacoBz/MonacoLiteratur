@@ -8,5 +8,18 @@ public enum LENGUAJE {
     @JsonProperty("es")
     ES,
     @JsonProperty("fr")
-    FR;
+    FR,
+    @JsonProperty("de")
+    DE;
+
+    public static LENGUAJE toString(String lenguaje) throws Exception {
+        return switch (lenguaje){
+          case "en" -> LENGUAJE.EN;
+          case "es" -> LENGUAJE.ES;
+          case "fr" -> LENGUAJE.FR;
+          case "de" -> LENGUAJE.DE;
+            default -> throw new Exception("Lenguaje no identificado");
+        };
+    }
+
 }

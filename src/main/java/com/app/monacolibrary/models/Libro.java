@@ -19,8 +19,8 @@ public class Libro {
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<LENGUAJE> idiomas;
+    @Enumerated(EnumType.STRING)
+    private LENGUAJE idioma;
 
     private Long descargas;
 
@@ -30,7 +30,7 @@ public class Libro {
         this.titulo = datos.titulo();
         this.autor = new Autor(datos.autores().get(0));
         this.descargas = datos.descargas();
-        this.idiomas = datos.idiomas();
+        this.idioma = datos.idiomas().get(0);
     }
 
     public Autor getAutor() {
@@ -57,12 +57,12 @@ public class Libro {
         this.id = id;
     }
 
-    public List<LENGUAJE> getIdiomas() {
-        return idiomas;
+    public LENGUAJE getIdioma() {
+        return idioma;
     }
 
-    public void setIdiomas(List<LENGUAJE> idiomas) {
-        this.idiomas = idiomas;
+    public void setIdioma(LENGUAJE idioma) {
+        this.idioma = idioma;
     }
 
     public String getTitulo() {
@@ -73,15 +73,4 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    @Override
-    public String toString() {
-        return """
-                -----LIBRO-----
-                Título: %s
-                Autor: %s
-                Idioma: %s
-                Descargas: %d
-                ----------------
-                """.formatted(titulo,autor.getNombre(),idiomas.get(0).toString(),descargas);
-    }
 }
