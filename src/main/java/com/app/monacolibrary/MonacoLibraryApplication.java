@@ -11,12 +11,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MonacoLibraryApplication implements CommandLineRunner {
 
+    public MonacoLibraryApplication(Ui ui) {
+        this.ui = ui;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(MonacoLibraryApplication.class, args);
     }
 
-    @Autowired
-    private Ui ui;
+    private final Ui ui;
 
     @Override
     @Transactional
