@@ -2,12 +2,14 @@ package com.app.monacolibrary.ui;
 
 import com.app.monacolibrary.models.Autor;
 import com.app.monacolibrary.models.Libro;
+import com.app.monacolibrary.repository.AutorRepository;
 import com.app.monacolibrary.repository.LibroRepository;
 import com.app.monacolibrary.service.ApiRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Ui {
@@ -17,10 +19,13 @@ public class Ui {
     private final ApiRequest API = new ApiRequest();
 
 
-    private final LibroRepository repository;
+    private final LibroRepository repositoryLibro;
 
-    public Ui(LibroRepository repository){
-        this.repository = repository;
+    private final AutorRepository repositoryAutor;
+
+    public Ui(LibroRepository repositoryLibro, AutorRepository repositoryAutor){
+        this.repositoryLibro = repositoryLibro;
+        this.repositoryAutor = repositoryAutor;
     }
 
     public void menu(){
@@ -63,18 +68,18 @@ public class Ui {
     }
 
     private void listarAutoresRegistrados() {
-        
+        repositoryAutor.findAll().forEach(System.out::println);
     }
 
     private void listarLibrosRegistrados() {
         System.out.println("Libros registrados:");
-        repository.findAll().forEach(System.out::println);
+        repositoryLibro.findAll().forEach(System.out::println);
     }
 
     private void buscarLibroPorNombre(){
         System.out.println("Introduce el nombre del libro a buscar");
         String nombre = sc.nextLine();
-        List<Libro> libros = repository.findByTituloContainingIgnoreCase(nombre);
+        List<Libro> libros = repositoryLibro.findByTituloContainingIgnoreCase(nombre);
         if(!libros.isEmpty()){
             System.out.println("Libros encontrados:");
             libros.forEach(System.out::println);
@@ -86,7 +91,14 @@ public class Ui {
         try {
             var datos = API.realizaSolicitud(URL_BASE + nombre.replace(" ","%20"));
             var libro = new Libro(datos);
-            repository.save(libro);
+            var autor = repositoryAutor.findByNombreIgnoreCase(libro.getAutor().getNombre())
+                    .orElse(libro.getAutor());
+            if(autor.getId() == null) autor = repositoryAutor.save(autor);
+
+            autor.agregarLibro(libro);
+
+            repositoryLibro.save(libro);
+
             System.out.println(libro);
 
         }catch (Exception e){

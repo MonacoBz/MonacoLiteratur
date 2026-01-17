@@ -2,6 +2,9 @@ package com.app.monacolibrary.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "autores")
 public class Autor {
@@ -16,9 +19,8 @@ public class Autor {
 
     private Integer muerte;
 
-    @ManyToOne
-    @JoinColumn(name = "libro_id")
-    private Libro libro;
+    @OneToMany(mappedBy = "autor",fetch = FetchType.EAGER)
+    private List<Libro> libros = new ArrayList<>();
 
     public Autor(){}
 
@@ -60,16 +62,30 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public Libro getLibro() {
-        return libro;
+    public List<Libro> getLibros() {
+        return libros;
     }
 
-    public void setLibro(Libro libro) {
-        this.libro = libro;
+    public void setLibros(List<Libro> libros) {
+        this.libros = libros;
+    }
+
+    public void agregarLibro(Libro libro){
+        this.libros.add(libro);
+        libro.setAutor(this);
     }
 
     @Override
     public String toString() {
-        return getNombre();
+        List<String> titulos = getLibros().stream()
+                .map(Libro::getTitulo)
+                .toList();
+
+        return """
+           Autor: %s
+           Nacimiento: %s
+           Muerte: %s
+           Libros: %s
+           """.formatted(nombre, nacimiento, muerte, titulos);
     }
 }

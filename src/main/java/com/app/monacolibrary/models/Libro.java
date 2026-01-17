@@ -2,6 +2,7 @@ package com.app.monacolibrary.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,9 @@ public class Libro {
 
     private String titulo;
 
-    @OneToMany(mappedBy = "libro", fetch = FetchType.EAGER)
-    private List<Autor> autores;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "autor_id")
+    private Autor autor;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<LENGUAJE> idiomas;
@@ -26,17 +28,17 @@ public class Libro {
 
     public Libro(DatosLibro datos){
         this.titulo = datos.titulo();
-        this.autores = datos.autores().stream().map(a -> new Autor(a)).toList();
+        this.autor = new Autor(datos.autores().get(0));
         this.descargas = datos.descargas();
         this.idiomas = datos.idiomas();
     }
 
-    public List<Autor> getAutores() {
-        return autores;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setAutores(List<Autor> autores) {
-        this.autores = autores;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
 
     public Long getDescargas() {
@@ -80,6 +82,6 @@ public class Libro {
                 Idioma: %s
                 Descargas: %d
                 ----------------
-                """.formatted(getTitulo(),getAutores().get(0).getNombre(),getIdiomas().get(0).toString(),getDescargas());
+                """.formatted(titulo,autor.getNombre(),idiomas.get(0).toString(),descargas);
     }
 }
